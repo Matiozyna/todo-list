@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+    <changeSet id="0001" author="mkuchciak">
+        <createTable tableName="app_user">
+            <column name="id" type = 'BIGINT' autoIncrement="true" >
+            <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(100)"/>
+            <column name="password" type="VARCHAR(100)"/>
+            <column name="display_name" type="VARCHAR(100)"/>
+            <column name="level" type="INT"/>
+            <column name="experience" type="INT"/>
+            <column name="register_date" type="date"/>
+        </createTable>
+
+    </changeSet>
+    <changeSet id="0002" author="mkuchciak">
+        <createTable tableName="quest">
+            <column name="id" type = 'BIGINT' autoIncrement="true" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="category" type="TINYINT"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="date_added" type="date"/>
+            <column name="start_date" type="date"/>
+            <column name="periodicity" type="TINYINT" />
+            <column name="users_id" type="BIGINT"/>
+        </createTable>
+        <createTable tableName="quest_completion_dates">
+            <column name="quest_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="completion_dates" type="date" />
+        </createTable>
+        <addForeignKeyConstraint baseTableName="quest_completion_dates" baseColumnNames="quest_id" constraintName="quest_to_completions_dates" referencedTableName="quest"
+                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="quest" baseColumnNames="users_id" constraintName="quest_to_userid"
+                                 referencedTableName="app_user"
+                                 referencedColumnNames="id" />
+    </changeSet>
+
+    <include file="insert_user_test_data.xml" relativeToChangelogFile="true" />
+    <include file="insert_quest_test_data.xml" relativeToChangelogFile="true" />
+</databaseChangeLog>
